@@ -286,7 +286,13 @@ window.onload = async function() {
 };
 
 async function init() {
-  try { bookmarks = JSON.parse(localStorage.getItem('vwn-bookmarks') || '{}'); } catch {}
+  try { 
+    bookmarks = JSON.parse(localStorage.getItem('vwn-bookmarks') || '{}'); 
+    // 저장된 학습 진도 로드 (Tier별 인덱스 저장)
+    const savedIdx = localStorage.getItem(`vwn-learn-idx-t${selectedTier}`);
+    if (savedIdx) learnIdx = parseInt(savedIdx);
+  } catch {}
+  
   updateBadge();
   
   SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${f}` });
@@ -309,12 +315,18 @@ function renderTierList() {
       <div class="t-count">${info.count}단어</div>
       <div class="t-desc">${info.desc}</div>
     `;
-    div.onclick = () => { selectedTier = parseInt(t); renderTierList(); };
+    div.onclick = () => { 
+      selectedTier = parseInt(t); 
+      // Tier 변경 시 해당 티어의 저장된 진도 불러오기
+      const saved = localStorage.getItem(`vwn-learn-idx-t${selectedTier}`);
+      learnIdx = saved ? parseInt(saved) : 0;
+      renderTierList(); 
+    };
     el.appendChild(div);
   }
 }
 
-// --- IndexedDB Cache ---
+// --- IndexedDB Cache & Load ---
 function openCache() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open('vwn-cache', 1);
@@ -356,7 +368,6 @@ async function setCache(tier, data) {
   });
 }
 
-// --- Load Tier ---
 async function loadTier(tier) {
   showLoading('데이터를 불러오는 중...');
   try {
@@ -410,7 +421,8 @@ async function loadTier(tier) {
 
 function loadWords() {
   if (!db) return;
-  const results = db.exec('SELECT id, word, meaning, pronunciation, examples, synonyms, antonyms, etymology, nuance FROM words ORDER BY RANDOM()');
+  // 단어 리스트를 고정된 순서로 가져옵니다 (진도 관리를 위해 id 순 정렬 권장)
+  const results = db.exec('SELECT id, word, meaning, pronunciation, examples, synonyms, antonyms, etymology, nuance FROM words ORDER BY id ASC');
   if (!results.length) return;
   words = results[0].values.map(r => ({
     id: r[0], w: r[1], m: r[2] || '', p: r[3] || '',
@@ -446,19 +458,41 @@ function setLoadingText(t) { document.getElementById('loading-text').textContent
 function setLoadingProgress(p) { document.getElementById('loading-fill').style.width = p + '%'; }
 function hideLoading() { document.getElementById('loading').style.display = 'none'; }
 
-// --- Learn ---
+// --- Learn (반복 방지 알고리즘 추가) ---
 async function startLearn() {
   if (!db || words.length === 0) await loadTier(selectedTier);
   if (words.length === 0) return;
-  learnIdx = 0;
+  
+  // 저장된 인덱스 확인
+  const saved = localStorage.getItem(`vwn-learn-idx-t${selectedTier}`);
+  learnIdx = saved ? parseInt(saved) : 0;
+  
+  // 모든 단어를 다 학습한 경우 리셋 여부 확인
+  if (learnIdx >= words.length) {
+    if (confirm('해당 티어의 모든 단어를 학습했습니다. 처음부터 다시 시작할까요?')) {
+      resetLearnProgress();
+    } else {
+      return;
+    }
+  }
+
   showingDetail = false;
   renderLearn();
   showScreen('learn');
 }
 
+function resetLearnProgress() {
+  learnIdx = 0;
+  localStorage.setItem(`vwn-learn-idx-t${selectedTier}`, 0);
+  renderLearn();
+}
+
 function renderLearn() {
   const w = words[learnIdx];
-  if (!w) return;
+  if (!w) {
+    showScreen('home');
+    return;
+  }
   const isBookmarked = !!bookmarks[w.w];
   let detailHTML = '';
   if (showingDetail) {
@@ -497,17 +531,24 @@ function renderLearn() {
 
 function nextLearnWord(known) {
   const w = words[learnIdx];
+  // '몰라요'를 누른 경우 자동으로 북마크(별표)에 저장하여 나중에 다시보기 유도
   if (!known && !bookmarks[w.w]) toggleBookmark(w);
+  
   showingDetail = false;
-  if (learnIdx < words.length - 1) {
-    learnIdx++;
+  learnIdx++;
+  
+  // 현재 진도를 로컬 저장소에 저장 (반복 방지 알고리즘의 핵심)
+  localStorage.setItem(`vwn-learn-idx-t${selectedTier}`, learnIdx);
+  
+  if (learnIdx < words.length) {
     renderLearn();
   } else {
+    alert('축하합니다! 이 티어의 모든 단어를 확인했습니다.');
     showScreen('home');
   }
 }
 
-// --- Quiz ---
+// --- Quiz & Review & Utils ---
 async function startQuiz() {
   if (!db || words.length === 0) await loadTier(selectedTier);
   if (words.length === 0) return;
@@ -591,7 +632,6 @@ function renderResult() {
     </div>`;
 }
 
-// --- Review ---
 function renderReview(query = '') {
   const bm = Object.values(bookmarks);
   let searchHTML = '';
@@ -657,7 +697,6 @@ function toggleReviewCard(id) {
   }
 }
 
-// --- Bookmarks & Utils ---
 function toggleBookmark(word) {
   if (bookmarks[word.w]) delete bookmarks[word.w];
   else bookmarks[word.w] = { id: word.id, w: word.w, m: word.m, p: word.p, e: word.e, s: word.s, a: word.a, et: word.et };
