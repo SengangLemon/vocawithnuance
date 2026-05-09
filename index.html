@@ -48,59 +48,14 @@ html, body {
   padding-bottom: env(safe-area-inset-bottom, 20px);
 }
 
-/* ─── Password Gate ─── */
-#gate {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 40px 24px;
-  text-align: center;
-}
-#gate .logo-mark {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 64px;
-  font-weight: 300;
-  font-style: italic;
-  background: linear-gradient(135deg, #2B5F8A 0%, #7B4A8D 50%, #9B4D5A 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 12px;
-}
-#gate h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
-  font-weight: 400;
-  color: #4A5A6A;
-  margin-bottom: 32px;
-}
-#gate input {
-  width: 100%;
-  max-width: 280px;
-  padding: 14px 18px;
-  border: 1px solid #D8D0C4;
-  border-radius: 8px;
-  background: var(--paper);
-  font-size: 16px;
-  font-family: inherit;
-  color: var(--text);
-  text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
-}
-#gate input:focus { border-color: var(--ink-purple); }
-#gate .error { color: var(--ink-rose); font-size: 13px; margin-top: 12px; }
-#gate .hint { color: var(--text-faint); font-size: 11px; margin-top: 8px; }
-
-/* ─── Screens ─── */
+/* --- Screens --- */
 .screen { display: none; padding: 20px; }
 .screen.active { display: block; animation: fadeIn 0.35s ease-out; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ─── Home ─── */
+/* --- Home --- */
 .home-logo { text-align: center; padding: 28px 0 24px; }
 .home-logo .mark {
   font-family: 'Cormorant Garamond', serif;
@@ -126,7 +81,6 @@ html, body {
 .tier-item .t-label { font-size: 14px; font-weight: 600; min-width: 52px; }
 .tier-item .t-count { font-size: 12px; color: var(--text-light); flex: 1; }
 .tier-item .t-desc { font-size: 12px; color: var(--text-muted); }
-.tier-item .t-cached { font-size: 10px; color: var(--ink-olive); }
 
 .action-col { display: flex; flex-direction: column; gap: 10px; }
 .btn-primary {
@@ -156,7 +110,7 @@ html, body {
   padding: 2px 8px; min-width: 20px; text-align: center;
 }
 
-/* ─── Loading ─── */
+/* --- Loading --- */
 .loading-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(245,240,232,0.95); display: flex;
@@ -179,16 +133,15 @@ html, body {
   transition: width 0.3s; border-radius: 1px;
 }
 
-/* ─── Top Bar ─── */
+/* --- Top Bar & Progress --- */
 .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .back-btn { background: none; border: none; color: var(--text-light); font-size: 14px; cursor: pointer; font-family: inherit; }
 .counter { font-size: 13px; color: var(--text-muted); font-family: 'Cormorant Garamond', serif; }
 .star-btn { background: none; border: none; font-size: 24px; cursor: pointer; transition: color 0.2s; }
-
 .progress-bar { width: 100%; height: 2px; background: #E8E2D8; border-radius: 1px; margin-bottom: 24px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 1px; transition: width 0.4s ease; }
 
-/* ─── Word Card ─── */
+/* --- Word Card & Learn --- */
 .word-card {
   background: var(--paper); border-radius: 12px; padding: 32px 24px 28px;
   text-align: center; box-shadow: 0 1px 8px rgba(58,53,48,0.06);
@@ -202,7 +155,6 @@ html, body {
   border-radius: 24px; color: #6A6258; font-size: 14px;
   cursor: pointer; font-family: inherit; letter-spacing: 1px;
 }
-
 .detail-area { text-align: left; animation: slideUp 0.3s ease-out; }
 .meaning-box { background: var(--highlight-blue); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; border-left: 2px solid var(--ink-blue); }
 .section-tag { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
@@ -212,7 +164,6 @@ html, body {
 .tag-label { font-size: 11px; color: var(--text-muted); font-weight: 500; min-width: 36px; letter-spacing: 1px; }
 .syn-tag { font-size: 12px; background: rgba(107,123,58,0.1); color: #5A6B3A; padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(107,123,58,0.2); }
 .ant-tag { font-size: 12px; background: rgba(155,77,90,0.08); color: #8B4050; padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(155,77,90,0.15); }
-
 .example-box { background: var(--highlight-purple); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; border-left: 2px solid var(--ink-purple); }
 .example-text { font-size: 13px; line-height: 1.7; color: #5A5348; font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 6px; }
 .etym-box { background: var(--highlight-rose); border-radius: 8px; padding: 14px 16px; border-left: 2px solid var(--ink-rose); }
@@ -222,7 +173,7 @@ html, body {
 .know-btn { flex: 1; padding: 14px; background: var(--ink-olive); color: var(--cream); border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
 .dont-know-btn { flex: 1; padding: 14px; background: none; color: var(--ink-rose); border: 1px solid var(--ink-rose); border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
 
-/* ─── Quiz ─── */
+/* --- Quiz & Result --- */
 .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; text-align: left; }
 .quiz-option {
   display: flex; align-items: flex-start; gap: 12px;
@@ -237,7 +188,6 @@ html, body {
 .option-text { flex: 1; }
 .next-quiz-btn { margin-top: 20px; width: 100%; padding: 14px; background: var(--ink-purple); color: var(--cream); border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
 
-/* ─── Result ─── */
 .result-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
 .result-circle { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--ink-purple); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 24px; }
 .result-score { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--ink-purple); }
@@ -246,28 +196,16 @@ html, body {
 .result-sub { font-size: 14px; color: var(--text-light); line-height: 1.6; }
 .result-actions { display: flex; gap: 12px; margin-top: 32px; }
 
-/* ─── Review ─── */
-.search-box {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--paper); border: 1px solid #D8D0C4;
-  border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
-}
-.search-box input {
-  flex: 1; border: none; background: none; font-size: 14px;
-  font-family: inherit; color: var(--text); outline: none;
-}
+/* --- Review & Search --- */
+.search-box { display: flex; align-items: center; gap: 8px; background: var(--paper); border: 1px solid #D8D0C4; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; }
+.search-box input { flex: 1; border: none; background: none; font-size: 14px; font-family: inherit; color: var(--text); outline: none; }
 .clear-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; }
-
-.search-results {
-  background: rgba(43,95,138,0.03); border: 1px solid rgba(43,95,138,0.1);
-  border-radius: 8px; margin-bottom: 16px; max-height: 200px; overflow-y: auto;
-}
+.search-results { background: rgba(43,95,138,0.03); border: 1px solid rgba(43,95,138,0.1); border-radius: 8px; margin-bottom: 16px; max-height: 200px; overflow-y: auto; }
 .sr-title { font-size: 11px; color: var(--ink-blue); font-weight: 600; letter-spacing: 1px; padding: 8px 14px; }
 .sr-item { display: flex; align-items: center; padding: 8px 14px; gap: 8px; border-bottom: 1px solid rgba(216,208,196,0.3); }
 .sr-word { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 500; margin-right: 8px; }
 .sr-meaning { font-size: 12px; color: var(--text-light); flex: 1; }
 .mini-star { background: none; border: none; font-size: 20px; cursor: pointer; transition: color 0.2s; }
-
 .review-card { background: var(--paper); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; animation: slideUp 0.3s ease-out; }
 .review-header { display: flex; align-items: center; padding: 14px 16px; cursor: pointer; gap: 8px; }
 .review-word { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; margin-right: 10px; }
@@ -276,7 +214,6 @@ html, body {
 .chevron.open { transform: rotate(90deg); }
 .review-detail { padding: 0 16px 16px; animation: slideUp 0.2s ease-out; }
 .review-meaning { font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
-
 .empty-state { text-align: center; padding: 60px 20px; }
 .empty-icon { font-size: 40px; color: #D8D0C4; margin-bottom: 16px; }
 .empty-text { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
@@ -284,15 +221,6 @@ html, body {
 </head>
 <body>
 <div id="app">
-
-<!-- Password Gate -->
-<div id="gate">
-  <div class="logo-mark">W</div>
-  <h1>voca<span style="color:#7B4A8D">with</span>nuance</h1>
-  <input type="password" id="pw-input" placeholder="패스워드를 입력하세요" autofocus>
-  <div class="error" id="pw-error" style="display:none">잘못된 패스워드입니다</div>
-  <div class="hint">비공개 버전</div>
-</div>
 
 <!-- Loading Overlay -->
 <div class="loading-overlay" id="loading" style="display:none">
@@ -321,21 +249,17 @@ html, body {
 
 <!-- LEARN -->
 <div class="screen" id="screen-learn"></div>
-
 <!-- QUIZ -->
 <div class="screen" id="screen-quiz"></div>
-
 <!-- QUIZ RESULT -->
 <div class="screen" id="screen-result"></div>
-
 <!-- REVIEW -->
 <div class="screen" id="screen-review"></div>
 
 </div>
 
 <script>
-// ─── Config ───
-  // 여기에 원하는 패스워드를 설정하세요
+// --- Config ---
 const TIERS = {
   1: { label: 'Tier 1', count: '14,611', desc: '핵심 고빈도', color: '#2B5F8A' },
   2: { label: 'Tier 2', count: '19,844', desc: '중급 필수', color: '#7B4A8D' },
@@ -356,34 +280,21 @@ let quizScore = { correct: 0, total: 0 };
 let bookmarks = {};
 let showingDetail = false;
 
-// ─── Password Gate ───
-document.getElementById('pw-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const val = e.target.value;
-    if (val === PASSWORD) {
-      document.getElementById('gate').style.display = 'none';
-      init();
-    } else {
-      document.getElementById('pw-error').style.display = 'block';
-      e.target.value = '';
-    }
-  }
-});
+// --- Init ---
+window.onload = async function() {
+  await init();
+};
 
-// ─── Init ───
 async function init() {
-  // Load bookmarks from localStorage
   try { bookmarks = JSON.parse(localStorage.getItem('vwn-bookmarks') || '{}'); } catch {}
   updateBadge();
   
-  // Initialize SQL.js
   SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${f}` });
   
   renderTierList();
   showScreen('home');
   
-  // Auto-load tier 1 if cached
-  if (await isCached(1)) loadTier(1);
+  if (await isCached(selectedTier)) loadTier(selectedTier);
 }
 
 function renderTierList() {
@@ -403,7 +314,7 @@ function renderTierList() {
   }
 }
 
-// ─── IndexedDB Cache ───
+// --- IndexedDB Cache ---
 function openCache() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open('vwn-cache', 1);
@@ -445,12 +356,10 @@ async function setCache(tier, data) {
   });
 }
 
-// ─── Load Tier ───
+// --- Load Tier ---
 async function loadTier(tier) {
   showLoading('데이터를 불러오는 중...');
-  
   try {
-    // Check cache first
     const cached = await getCached(tier);
     if (cached) {
       setLoadingProgress(80);
@@ -461,7 +370,6 @@ async function loadTier(tier) {
       return;
     }
     
-    // Download .db.gz file
     setLoadingText(`Tier ${tier} 다운로드 중...`);
     const resp = await fetch(`data/voca_t${tier}.db.gz`);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -470,7 +378,6 @@ async function loadTier(tier) {
     const contentLength = +resp.headers.get('Content-Length') || 0;
     let received = 0;
     const chunks = [];
-    
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -481,11 +388,8 @@ async function loadTier(tier) {
     
     setLoadingProgress(60);
     setLoadingText('압축 해제 중...');
-    
     const blob = new Blob(chunks);
     const arrayBuf = await blob.arrayBuffer();
-    
-    // Decompress gzip
     const ds = new DecompressionStream('gzip');
     const writer = ds.writable.getWriter();
     writer.write(new Uint8Array(arrayBuf));
@@ -494,18 +398,13 @@ async function loadTier(tier) {
     
     setLoadingProgress(80);
     setLoadingText('데이터베이스 로딩 중...');
-    
-    // Cache for next time
     await setCache(tier, decompressed);
-    
-    // Load into sql.js
     db = new SQL.Database(new Uint8Array(decompressed));
     loadWords();
     hideLoading();
-    
   } catch (err) {
     hideLoading();
-    alert(`데이터 로딩 실패: ${err.message}\n\n해당 Tier의 데이터 파일(data/voca_t${tier}.db.gz)이 서버에 있는지 확인하세요.`);
+    alert(`데이터 로딩 실패: ${err.message}`);
   }
 }
 
@@ -513,7 +412,6 @@ function loadWords() {
   if (!db) return;
   const results = db.exec('SELECT id, word, meaning, pronunciation, examples, synonyms, antonyms, etymology, nuance FROM words ORDER BY RANDOM()');
   if (!results.length) return;
-  
   words = results[0].values.map(r => ({
     id: r[0], w: r[1], m: r[2] || '', p: r[3] || '',
     e: safeJSON(r[4]), s: safeJSON(r[5]), a: safeJSON(r[6]),
@@ -531,12 +429,11 @@ function safeNuance(s) {
   try { const n = JSON.parse(s); return typeof n === 'object' ? (n.reason || '') : String(n).slice(0, 300); } catch { return String(s).slice(0, 300); }
 }
 
-// ─── Screen Management ───
+// --- UI Management ---
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(`screen-${name}`);
   if (el) el.classList.add('active');
-  
   if (name === 'review') renderReview();
 }
 
@@ -549,11 +446,10 @@ function setLoadingText(t) { document.getElementById('loading-text').textContent
 function setLoadingProgress(p) { document.getElementById('loading-fill').style.width = p + '%'; }
 function hideLoading() { document.getElementById('loading').style.display = 'none'; }
 
-// ─── Learn ───
+// --- Learn ---
 async function startLearn() {
   if (!db || words.length === 0) await loadTier(selectedTier);
   if (words.length === 0) return;
-  
   learnIdx = 0;
   showingDetail = false;
   renderLearn();
@@ -564,7 +460,6 @@ function renderLearn() {
   const w = words[learnIdx];
   if (!w) return;
   const isBookmarked = !!bookmarks[w.w];
-  
   let detailHTML = '';
   if (showingDetail) {
     detailHTML = `
@@ -577,8 +472,7 @@ function renderLearn() {
         ${w.a.length ? `<div class="tag-row"><span class="tag-label">반의어</span>${w.a.map(a => `<span class="ant-tag">${esc(a)}</span>`).join('')}</div>` : ''}
         ${w.e.length ? `<div class="example-box"><div class="section-tag">예문</div>${w.e.map(e => `<p class="example-text">"${esc(e)}"</p>`).join('')}</div>` : ''}
         ${w.et ? `<div class="etym-box"><div class="section-tag">어원</div><p class="etym-text">${esc(w.et)}</p></div>` : ''}
-      </div>
-    `;
+      </div>`;
   } else {
     detailHTML = `<button class="reveal-btn" onclick="showingDetail=true;renderLearn()">뜻 보기</button>`;
   }
@@ -598,24 +492,26 @@ function renderLearn() {
     <div class="learn-actions">
       <button class="know-btn" onclick="nextLearnWord(true)">알아요 →</button>
       <button class="dont-know-btn" onclick="nextLearnWord(false)">몰라요 ★</button>
-    </div>
-  `;
+    </div>`;
 }
 
 function nextLearnWord(known) {
   const w = words[learnIdx];
   if (!known && !bookmarks[w.w]) toggleBookmark(w);
   showingDetail = false;
-  learnIdx = Math.min(learnIdx + 1, words.length - 1);
-  renderLearn();
+  if (learnIdx < words.length - 1) {
+    learnIdx++;
+    renderLearn();
+  } else {
+    showScreen('home');
+  }
 }
 
-// ─── Quiz ───
+// --- Quiz ---
 async function startQuiz() {
   if (!db || words.length === 0) await loadTier(selectedTier);
   if (words.length === 0) return;
-  
-  const shuffled = shuffle(words);
+  const shuffled = shuffle([...words]);
   quizWords = shuffled.slice(0, 10).map(w => {
     const wrongs = shuffle(words.filter(x => x.id !== w.id)).slice(0, 3).map(x => x.m);
     const options = shuffle([w.m, ...wrongs]);
@@ -631,7 +527,6 @@ async function startQuiz() {
 function renderQuiz() {
   const w = quizWords[quizIdx];
   if (!w) return;
-  
   document.getElementById('screen-quiz').innerHTML = `
     <div class="top-bar">
       <button class="back-btn" onclick="showScreen('home')">← 홈</button>
@@ -656,8 +551,7 @@ function renderQuiz() {
         }).join('')}
       </div>
       ${quizAnswer !== null ? `<button class="next-quiz-btn" onclick="nextQuiz()">${quizIdx < quizWords.length - 1 ? '다음 →' : '결과 보기'}</button>` : ''}
-    </div>
-  `;
+    </div>`;
 }
 
 function answerQuiz(idx) {
@@ -666,10 +560,7 @@ function answerQuiz(idx) {
   const correct = idx === quizWords[quizIdx].correctIdx;
   quizScore.correct += correct ? 1 : 0;
   quizScore.total += 1;
-  if (!correct) {
-    const w = quizWords[quizIdx];
-    if (!bookmarks[w.w]) toggleBookmark(w);
-  }
+  if (!correct) toggleBookmark(quizWords[quizIdx]);
   renderQuiz();
 }
 
@@ -685,10 +576,7 @@ function nextQuiz() {
 }
 
 function renderResult() {
-  const msg = quizScore.correct === quizScore.total ? '완벽해요!' :
-              quizScore.correct >= quizScore.total * 0.7 ? '잘했어요!' : '더 노력해봐요!';
-  const missed = quizScore.total - quizScore.correct;
-  
+  const msg = quizScore.correct === quizScore.total ? '완벽해요!' : quizScore.correct >= quizScore.total * 0.7 ? '잘했어요!' : '더 노력해봐요!';
   document.getElementById('screen-result').innerHTML = `
     <div class="result-container">
       <div class="result-circle">
@@ -696,40 +584,37 @@ function renderResult() {
         <div class="result-total">/ ${quizScore.total}</div>
       </div>
       <h2 class="result-title">${msg}</h2>
-      <p class="result-sub">${missed > 0 ? `틀린 ${missed}개 단어가 ★에 저장되었습니다.` : '모든 단어를 맞추셨습니다!'}</p>
       <div class="result-actions">
         <button class="btn-primary" onclick="startQuiz()">다시 도전</button>
         <button class="btn-secondary" onclick="showScreen('home')">홈으로</button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ─── Review ───
+// --- Review ---
 function renderReview(query = '') {
   const bm = Object.values(bookmarks);
   let searchHTML = '';
-  
   if (query.length >= 2 && db) {
     try {
-      const results = db.exec(`SELECT id, word, meaning, pronunciation, examples, synonyms, antonyms, etymology FROM words WHERE word LIKE '%${query.replace(/'/g, "''")}%' LIMIT 20`);
+      const q = query.replace(/'/g, "''");
+      const results = db.exec(`SELECT id, word, meaning, pronunciation, examples, synonyms, antonyms, etymology FROM words WHERE word LIKE '%${q}%' LIMIT 20`);
       if (results.length && results[0].values.length) {
         searchHTML = `<div class="search-results"><div class="sr-title">전체 검색 결과</div>`;
         for (const r of results[0].values) {
           const w = { id: r[0], w: r[1], m: r[2]||'', p: r[3]||'', e: safeJSON(r[4]), s: safeJSON(r[5]), a: safeJSON(r[6]), et: (r[7]||'').slice(0,200) };
           const starred = bookmarks[w.w] ? '#9B4D5A' : '#C8C0B4';
-          searchHTML += `<div class="sr-item"><div style="flex:1"><span class="sr-word">${esc(w.w)}</span><span class="sr-meaning">${esc(w.m).slice(0,60)}</span></div><button class="mini-star" style="color:${starred}" onclick="toggleBookmark(${JSON.stringify(w).replace(/"/g, '&quot;')});renderReview(document.getElementById('review-search').value)">★</button></div>`;
+          searchHTML += `<div class="sr-item"><div style="flex:1"><span class="sr-word">${esc(w.w)}</span><span class="sr-meaning">${esc(w.m).slice(0,60)}</span></div><button class="mini-star" style="color:${starred}" onclick='toggleBookmark(${JSON.stringify(w).replace(/'/g, "&apos;")});renderReview(document.getElementById("review-search").value)'>★</button></div>`;
         }
         searchHTML += '</div>';
       }
-    } catch {}
+    } catch(e) { console.error(e); }
   }
   
   let bmHTML = '';
   const filtered = query ? bm.filter(w => w.w.toLowerCase().includes(query.toLowerCase()) || (w.m && w.m.toLowerCase().includes(query.toLowerCase()))) : bm;
-  
   if (filtered.length === 0) {
-    bmHTML = `<div class="empty-state"><div class="empty-icon">★</div><p class="empty-text">${bm.length === 0 ? '아직 저장한 단어가 없습니다.<br>학습이나 테스트에서 모르는 단어를 저장해보세요.' : '검색 결과가 없습니다.'}</p></div>`;
+    bmHTML = `<div class="empty-state"><div class="empty-icon">★</div><p class="empty-text">${bm.length === 0 ? '저장된 단어가 없습니다.' : '검색 결과가 없습니다.'}</p></div>`;
   } else {
     for (const w of filtered) {
       const starred = bookmarks[w.w] ? '#9B4D5A' : '#C8C0B4';
@@ -737,17 +622,15 @@ function renderReview(query = '') {
         <div class="review-card" id="rc-${w.id}">
           <div class="review-header" onclick="toggleReviewCard(${w.id})">
             <div style="flex:1"><span class="review-word">${esc(w.w)}</span><span class="review-pron">${esc(w.p || '')}</span></div>
-            <button class="mini-star" style="color:${starred}" onclick="event.stopPropagation();toggleBookmark(${JSON.stringify(w).replace(/"/g, '&quot;')});renderReview(document.getElementById('review-search').value)">★</button>
+            <button class="mini-star" style="color:${starred}" onclick='event.stopPropagation();toggleBookmark(${JSON.stringify(w).replace(/'/g, "&apos;")});renderReview(document.getElementById("review-search").value)'>★</button>
             <span class="chevron" id="chev-${w.id}">›</span>
           </div>
           <div class="review-detail" id="detail-${w.id}" style="display:none">
             <p class="review-meaning">${esc(w.m)}</p>
             ${w.s?.length ? `<div class="tag-row"><span class="tag-label">유</span>${w.s.map(s => `<span class="syn-tag">${esc(s)}</span>`).join('')}</div>` : ''}
-            ${w.a?.length ? `<div class="tag-row"><span class="tag-label">반</span>${w.a.map(a => `<span class="ant-tag">${esc(a)}</span>`).join('')}</div>` : ''}
             ${w.e?.length ? w.e.map(e => `<p class="example-text" style="font-style:italic;font-size:13px;color:#5A5348;margin-bottom:4px">"${esc(e)}"</p>`).join('') : ''}
           </div>
-        </div>
-      `;
+        </div>`;
     }
   }
   
@@ -758,33 +641,26 @@ function renderReview(query = '') {
     </div>
     <div class="search-box">
       <span style="font-size:16px;opacity:0.5">🔍</span>
-      <input id="review-search" placeholder="단어 검색 (전체 목록에서 추가 가능)" value="${esc(query)}" oninput="renderReview(this.value)">
+      <input id="review-search" placeholder="단어 검색" value="${esc(query)}" oninput="renderReview(this.value)">
       ${query ? '<button class="clear-btn" onclick="renderReview(\'\')">✕</button>' : ''}
     </div>
-    ${searchHTML}
-    ${bmHTML}
-  `;
+    ${searchHTML}${bmHTML}`;
 }
 
 function toggleReviewCard(id) {
   const det = document.getElementById(`detail-${id}`);
   const chev = document.getElementById(`chev-${id}`);
   if (det.style.display === 'none') {
-    det.style.display = 'block';
-    chev.classList.add('open');
+    det.style.display = 'block'; chev.classList.add('open');
   } else {
-    det.style.display = 'none';
-    chev.classList.remove('open');
+    det.style.display = 'none'; chev.classList.remove('open');
   }
 }
 
-// ─── Bookmarks ───
+// --- Bookmarks & Utils ---
 function toggleBookmark(word) {
-  if (bookmarks[word.w]) {
-    delete bookmarks[word.w];
-  } else {
-    bookmarks[word.w] = { id: word.id, w: word.w, m: word.m, p: word.p, e: word.e, s: word.s, a: word.a, et: word.et };
-  }
+  if (bookmarks[word.w]) delete bookmarks[word.w];
+  else bookmarks[word.w] = { id: word.id, w: word.w, m: word.m, p: word.p, e: word.e, s: word.s, a: word.a, et: word.et };
   localStorage.setItem('vwn-bookmarks', JSON.stringify(bookmarks));
   updateBadge();
 }
@@ -798,19 +674,17 @@ function updateBadge() {
   }
 }
 
-// ─── Utilities ───
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return a;
+  return array;
 }
 
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 </script>
 </body>
