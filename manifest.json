@@ -1,0 +1,16 @@
+{
+  "name": "VocaWithNuance",
+  "short_name": "VWN",
+  "description": "뉘앙스와 함께 배우는 어휘",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E8",
+  "theme_color": "#F5F0E8",
+  "icons": [
+    {
+      "src": "app_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
