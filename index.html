@@ -279,6 +279,30 @@ let quizAnswer = null;
 let quizScore = { correct: 0, total: 0 };
 let bookmarks = {};
 let showingDetail = false;
+let progress = {};
+
+// --- SRS ledger (학습·테스트 공유 숙련도 원장) ---
+const NOW = () => Date.now();
+const SRS_INTERVAL = [0, 1, 3, 7, 16, 35].map(d => d * 86400000); // box별 복습 간격(일)
+function loadProgress() {
+  try { progress = JSON.parse(localStorage.getItem(`vwn-progress-t${selectedTier}`) || '{}'); }
+  catch { progress = {}; }
+}
+function saveProgress() {
+  localStorage.setItem(`vwn-progress-t${selectedTier}`, JSON.stringify(progress));
+}
+// 학습/테스트 양쪽이 호출하는 공용 진입점
+function rate(w, ok) {
+  const p = progress[w.id] || (progress[w.id] = { box: 0, correct: 0, wrong: 0, due: 0, status: 'new' });
+  if (ok) { p.box = Math.min(5, p.box + 1); p.correct++; p.status = p.box >= 4 ? 'known' : 'learning'; }
+  else    { p.box = 0; p.wrong++; p.status = 'weak'; }
+  p.due = NOW() + SRS_INTERVAL[p.box];
+  saveProgress();
+}
+function progressCounts() { // 홈 카운트용 (학습함/복습대기/약점)
+  const v = Object.values(progress);
+  return { studied: v.length, due: v.filter(p => p.due <= NOW()).length, weak: v.filter(p => p.status === 'weak').length };
+}
 
 // --- Init ---
 window.onload = async function() {
@@ -429,6 +453,7 @@ function loadWords() {
     e: safeJSON(r[4]), s: safeJSON(r[5]), a: safeJSON(r[6]),
     et: (r[7] || '').slice(0, 200), n: safeNuance(r[8])
   }));
+  loadProgress(); // 현재 tier 숙련도 원장 로드
 }
 
 function safeJSON(s) {
@@ -531,6 +556,7 @@ function renderLearn() {
 
 function nextLearnWord(known) {
   const w = words[learnIdx];
+  rate(w, known); // 숙련도 기록: 알아요→box↑, 몰라요→box0/weak
   // '몰라요'를 누른 경우 자동으로 북마크(별표)에 저장하여 나중에 다시보기 유도
   if (!known && !bookmarks[w.w]) toggleBookmark(w);
   
@@ -549,11 +575,24 @@ function nextLearnWord(known) {
 }
 
 // --- Quiz & Review & Utils ---
-async function startQuiz() {
+// 출제 풀: 학습한 단어 중 복습 임박(약한 것) 우선 → 모자라면 학습한 단어 → 그래도 모자라면 미학습 단어로 채움
+function pickQuizPool(n = 10) {
+  const seen = words.filter(w => progress[w.id]);
+  const due = seen
+    .filter(w => progress[w.id].due <= NOW())
+    .sort((a, b) => (progress[a.id].box - progress[b.id].box) || (progress[a.id].due - progress[b.id].due));
+  let pool = due.slice(0, n);
+  if (pool.length < n) pool = pool.concat(shuffle(seen.filter(w => !pool.includes(w))).slice(0, n - pool.length));
+  if (pool.length < n) pool = pool.concat(shuffle(words.filter(w => !progress[w.id])).slice(0, n - pool.length));
+  return pool;
+}
+
+// ids를 주면 그 단어들만 출제(예: 방금 배운 단어 테스트), 없으면 복습 풀에서 추출
+async function startQuiz(ids = null) {
   if (!db || words.length === 0) await loadTier(selectedTier);
   if (words.length === 0) return;
-  const shuffled = shuffle([...words]);
-  quizWords = shuffled.slice(0, 10).map(w => {
+  const pool = ids ? words.filter(w => ids.includes(w.id)) : pickQuizPool(10);
+  quizWords = shuffle(pool).map(w => {
     const wrongs = shuffle(words.filter(x => x.id !== w.id)).slice(0, 3).map(x => x.m);
     const options = shuffle([w.m, ...wrongs]);
     return { ...w, options, correctIdx: options.indexOf(w.m) };
@@ -601,7 +640,8 @@ function answerQuiz(idx) {
   const correct = idx === quizWords[quizIdx].correctIdx;
   quizScore.correct += correct ? 1 : 0;
   quizScore.total += 1;
-  if (!correct) toggleBookmark(quizWords[quizIdx]);
+  rate(quizWords[quizIdx], correct); // 테스트 결과를 숙련도에 되먹임(정답도 box↑)
+  if (!correct) { quizWords[quizIdx]._wrong = true; if (!bookmarks[quizWords[quizIdx].w]) toggleBookmark(quizWords[quizIdx]); }
   renderQuiz();
 }
 
@@ -618,6 +658,7 @@ function nextQuiz() {
 
 function renderResult() {
   const msg = quizScore.correct === quizScore.total ? '완벽해요!' : quizScore.correct >= quizScore.total * 0.7 ? '잘했어요!' : '더 노력해봐요!';
+  const missedIds = quizWords.filter(w => w._wrong).map(w => w.id);
   document.getElementById('screen-result').innerHTML = `
     <div class="result-container">
       <div class="result-circle">
@@ -626,10 +667,59 @@ function renderResult() {
       </div>
       <h2 class="result-title">${msg}</h2>
       <div class="result-actions">
-        <button class="btn-primary" onclick="startQuiz()">다시 도전</button>
+        ${missedIds.length ? `<button class="btn-primary" onclick='reviewMissed(${JSON.stringify(missedIds)})'>틀린 단어 복습 (${missedIds.length})</button>` : ''}
+        <button class="${missedIds.length ? 'btn-secondary' : 'btn-primary'}" onclick="startQuiz()">다시 도전</button>
         <button class="btn-secondary" onclick="showScreen('home')">홈으로</button>
       </div>
     </div>`;
+}
+
+// === 테스트→학습 피드백 루프: 틀린 단어만 모아 복습 ===
+let reviewQueue = [];
+let reviewQueueIdx = 0;
+function reviewMissed(ids) {
+  reviewQueue = ids.map(id => words.find(w => w.id === id)).filter(Boolean);
+  if (!reviewQueue.length) { showScreen('home'); return; }
+  reviewQueueIdx = 0;
+  showingDetail = false;
+  renderReviewQueue();
+  showScreen('learn');
+}
+function renderReviewQueue() {
+  const w = reviewQueue[reviewQueueIdx];
+  if (!w) { showScreen('home'); return; }
+  const isBookmarked = !!bookmarks[w.w];
+  const detailHTML = showingDetail
+    ? `<div class="detail-area">
+         <div class="meaning-box"><div class="section-tag">의미</div><div class="meaning-text">${esc(w.m)}</div></div>
+         ${w.e.length ? `<div class="example-box"><div class="section-tag">예문</div>${w.e.map(e => `<p class="example-text">"${esc(e)}"</p>`).join('')}</div>` : ''}
+       </div>`
+    : `<button class="reveal-btn" onclick="showingDetail=true;renderReviewQueue()">뜻 보기</button>`;
+  document.getElementById('screen-learn').innerHTML = `
+    <div class="top-bar">
+      <button class="back-btn" onclick="showScreen('home')">← 홈</button>
+      <span class="counter">복습 ${reviewQueueIdx + 1} / ${reviewQueue.length}</span>
+      <button class="star-btn" style="color:${isBookmarked ? '#9B4D5A' : '#C8C0B4'}" onclick="toggleBookmark(reviewQueue[${reviewQueueIdx}]);renderReviewQueue()">★</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${((reviewQueueIdx + 1) / reviewQueue.length * 100)}%;background:#9B4D5A"></div></div>
+    <div class="word-card">
+      <div class="word-main">${esc(w.w)}</div>
+      <div class="word-pron">${esc(w.p)}</div>
+      ${detailHTML}
+    </div>
+    <div class="learn-actions">
+      <button class="know-btn" onclick="nextReviewWord(true)">알아요 →</button>
+      <button class="dont-know-btn" onclick="nextReviewWord(false)">몰라요 ★</button>
+    </div>`;
+}
+function nextReviewWord(known) {
+  const w = reviewQueue[reviewQueueIdx];
+  rate(w, known);
+  if (!known && !bookmarks[w.w]) toggleBookmark(w);
+  showingDetail = false;
+  reviewQueueIdx++;
+  if (reviewQueueIdx < reviewQueue.length) renderReviewQueue();
+  else { alert('틀린 단어 복습 완료!'); showScreen('home'); }
 }
 
 function renderReview(query = '') {
